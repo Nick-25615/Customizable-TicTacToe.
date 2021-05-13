@@ -10,37 +10,43 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct spaceInfo { char X = -1, Y = -1, occupant = ' '; };//This is used for the board array //Making occupant a enum or enum class might be a good idea but right now I don't know enough to
 
-struct posCode { //This is used for storing x and y (size or position)
+struct posCode { //This is used for storing x and y position
 	char X = -1, Y = -1;
-	posCode(){}
-	posCode(char x, char y):X(x), Y(y){}
+	posCode() {}
+	posCode(char x, char y) :X(x), Y(y) {}
+};
+
+struct sizeCode { //This is used for storing x and y size
+	char X = -1, Y = -1;
+	sizeCode() {}
+	sizeCode(char x, char y) :X(x), Y(y) {}
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Function Decarations
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-posCode WelcomePlayerAndGetSize();
+sizeCode WelcomePlayerAndGetSize();
 char GetAndCheckPlayerInputForSize();//This is a support function for WelcomePlayerAndGetSize() and is not ment to be use by it's self
 
-spaceInfo* GenerateStartboard(posCode size);
+spaceInfo* GenerateStartboard(sizeCode size);
 
 char ExplainHowToPlayAndGetWinCondition(char maxWinCondition);
 char GetAndCheckPlayerInputForWinCondition(char maxWinCondition);//This is a support function for ExplainHowToPlayAndGetWinCondition(char maxWinCondition) and is not ment to be use by it's self
 
-void Printboard(spaceInfo* board, posCode size);
+void Printboard(spaceInfo* board, sizeCode size);
 
-posCode MakeMove(spaceInfo* board,posCode size, char player);
-posCode GetAndCheckPlayerInputForMove(spaceInfo* board, posCode size);//This is a support function for MakeMove(spaceInfo* board,posCode size, char player) and is not ment to be use by it's self
+posCode MakeMove(spaceInfo* board, sizeCode size, char player);
+posCode GetAndCheckPlayerInputForMove(spaceInfo* board, sizeCode size);//This is a support function for MakeMove(spaceInfo* board, sizeCode size, char player) and is not ment to be use by it's self
 
-bool CheckIfPlayerWins(spaceInfo* board, posCode size, posCode pos, char winCondition);
-char CheckDirForWin(spaceInfo* board, posCode size, posCode pos, posCode dirToCheck);//This is a support function for CheckIfPlayerWins(spaceInfo* board, posCode size, posCode pos, char winCondition) and is not ment to be use by it's self
+bool CheckIfPlayerWins(spaceInfo* board, sizeCode size, posCode pos, char winCondition);
+char CheckDirForWin(spaceInfo* board, sizeCode size, posCode pos, posCode dirToCheck);//This is a support function for CheckIfPlayerWins(spaceInfo* board, sizeCode size, posCode pos, char winCondition) and is not ment to be use by it's self
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Main And Other Functures
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main() {
-	posCode size = WelcomePlayerAndGetSize();
+	sizeCode size = WelcomePlayerAndGetSize();
 	char winCondition = ExplainHowToPlayAndGetWinCondition(size.X > size.Y ? size.X : size.Y);
 
 	spaceInfo* board = GenerateStartboard(size);
@@ -86,8 +92,8 @@ int main() {
 }
 //delete board when done.
 
-posCode WelcomePlayerAndGetSize() {
-	posCode size;
+sizeCode WelcomePlayerAndGetSize() {
+	sizeCode size;
 
 	std::cout << "Welcome To TicTacToe Where You Can Choose The Size Of The board Up To 26 By 26\n";
 	std::cout << "\nPlease Type In How Wide You Want The board To Be ";
@@ -127,8 +133,8 @@ char GetAndCheckPlayerInputForSize() {
 		else {
 			size = (line[0] - 48) * 10 + line[1] - 48;
 		}
-	} 
-	else if (line.size() != 1  || line[0] < 48 || line[0] > 57) {
+	}
+	else if (line.size() != 1 || line[0] < 48 || line[0] > 57) {
 		std::cout << "\nOne Or Two Digit Numbers Under 26 Only Please ";
 		return -1;
 	}
@@ -138,7 +144,7 @@ char GetAndCheckPlayerInputForSize() {
 	return size;
 }
 
-spaceInfo* GenerateStartboard(posCode size) {
+spaceInfo* GenerateStartboard(sizeCode size) {
 	spaceInfo* board = new spaceInfo[size.X * size.Y];
 	for (short j = 0; j < size.Y; j++) {
 		for (short i = 0; i < size.X; i++) {
@@ -187,9 +193,9 @@ char GetAndCheckPlayerInputForWinCondition(char maxWinCondition) {
 	return winCondition;
 }
 
-void Printboard(spaceInfo* board, posCode size) {
+void Printboard(spaceInfo* board, sizeCode size) {
 
-	for(short j = 0; j < size.Y; j++){
+	for (short j = 0; j < size.Y; j++) {
 
 		std::cout << "\n ";
 
@@ -208,7 +214,7 @@ void Printboard(spaceInfo* board, posCode size) {
 		}
 
 		std::cout << "\n ";
-		
+
 		for (short i = 0; i < size.X; i++) {
 			std::cout << board[j * size.X + i].occupant << board[j * size.X + i].occupant << board[j * size.X + i].occupant << board[j * size.X + i].occupant;
 
@@ -225,7 +231,7 @@ void Printboard(spaceInfo* board, posCode size) {
 	}
 }
 
-posCode MakeMove(spaceInfo* board, posCode size, char player) {
+posCode MakeMove(spaceInfo* board, sizeCode size, char player) {
 	posCode pos;
 	do {
 		pos = GetAndCheckPlayerInputForMove(board, size);
@@ -234,7 +240,7 @@ posCode MakeMove(spaceInfo* board, posCode size, char player) {
 	return pos;
 }
 
-posCode GetAndCheckPlayerInputForMove(spaceInfo* board, posCode size) {
+posCode GetAndCheckPlayerInputForMove(spaceInfo* board, sizeCode size) {
 	std::string line;
 	posCode posOfPlayerMove;
 
@@ -255,7 +261,7 @@ posCode GetAndCheckPlayerInputForMove(spaceInfo* board, posCode size) {
 	return posOfPlayerMove;
 }
 
-bool CheckIfPlayerWins(spaceInfo* board, posCode size, posCode pos, char winCondition) {
+bool CheckIfPlayerWins(spaceInfo* board, sizeCode size, posCode pos, char winCondition) {
 	if (CheckDirForWin(board, size, pos, posCode(0, 1)) > winCondition - 1) {
 		return 1;
 	}
@@ -271,7 +277,7 @@ bool CheckIfPlayerWins(spaceInfo* board, posCode size, posCode pos, char winCond
 	return 0;
 }
 
-char CheckDirForWin(spaceInfo* board, posCode size, posCode pos, posCode dirToCheck) {
+char CheckDirForWin(spaceInfo* board, sizeCode size, posCode pos, posCode dirToCheck) {
 	char total = -1;
 	char player = board[pos.Y * size.X + pos.X].occupant;
 
